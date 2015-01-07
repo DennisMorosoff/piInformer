@@ -1,0 +1,27 @@
+<resources>
+
+    <string name="app_name">Информер ПИ СФУ</string>
+
+    <string-array name="menu_array">
+        <item>Новости</item>
+        <item>Расписание</item>
+        <item>Радио</item>
+        <item>Абитуриенту</item>
+        <item>Структура</item>
+        <item>Сайт</item>
+    </string-array>
+    <string-array name="menu_array_images">
+        <item>news</item>
+        <item>rasp</item>
+        <item>radio</item>
+        <item>abit</item>
+        <item>struct</item>
+        <item>site</item>
+    </string-array>
+    <string name="menu_open">Открыть боковое меню</string>
+    <string name="menu_close">Закрыть боковое меню</string>
+    <string name="action_websearch">Поиск</string>
+    <string name="app_not_available">Извините, браузеры недоступны</string>
+    <string name="imgDescription">Какая-то картинка</string>
+
+</resources>
