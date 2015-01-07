@@ -12,10 +12,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 }
 
-dependencies {
-   compile 'com.melnykov:floatingactionbutton:1.1.0'
-}
-
 android {
     compileSdkVersion 14
     buildToolsVersion "21.1.2"
