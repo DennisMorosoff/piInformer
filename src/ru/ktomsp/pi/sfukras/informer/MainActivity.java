@@ -9,14 +9,12 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -52,9 +51,9 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
+
 		Log.d("myLogs", "onCreate start");
-		
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
@@ -67,8 +66,6 @@ public class MainActivity extends Activity {
 		mMenuLayout.setDrawerShadow(R.drawable.drawer_shadow,
 				GravityCompat.START);
 
-		
-
 		mList = new ArrayList<HashMap<String, String>>();
 		for (int i = 0; i < mPageTitles.length; i++) {
 			HashMap<String, String> hm = new HashMap<String, String>();
@@ -78,22 +75,14 @@ public class MainActivity extends Activity {
 			mList.add(hm);
 		}
 
-
-
 		String[] from = { ITEM_MENU_ICON, ITEM_MENU_TITLE, COUNT };
 
-
-
 		int[] to = { R.id.menu_item_icon, R.id.menu_item_title, R.id.count };
-
-
 
 		mAdapter = new SimpleAdapter(getActionBar().getThemedContext(), mList,
 				R.layout.drawer_list_item, from, to);
 
-
 		mMenuList.setAdapter(mAdapter);
-
 
 		// устанавливаем слушател€ на список меню
 		mMenuList.setOnItemClickListener(new DrawerItemClickListener());
@@ -119,22 +108,22 @@ public class MainActivity extends Activity {
 		R.string.menu_close /* описание закрыти€ меню */
 		) {
 			public void onDrawerClosed(View view) {
-				
+
 				Log.d("myLogs", "onDrawerClosed start");
-				
+
 				getActionBar().setTitle(mTitle);
 				invalidateOptionsMenu(); // вызываем onPrepareOptionsMenu()
-				
+
 				Log.d("myLogs", "onDrawerClosed finish");
 			}
 
 			public void onDrawerOpened(View drawerView) {
-				
+
 				Log.d("myLogs", "onDrawerOpened start");
-				
+
 				getActionBar().setTitle(mMenuTitle);
 				invalidateOptionsMenu(); // вызываем onPrepareOptionsMenu()
-				
+
 				Log.d("myLogs", "onDrawerOpened finish");
 			}
 		};
@@ -143,7 +132,7 @@ public class MainActivity extends Activity {
 		if (savedInstanceState == null) {
 			selectItem(0);
 		}
-		
+
 		Log.d("myLogs", "onCreate finish");
 	}
 
@@ -215,13 +204,13 @@ public class MainActivity extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			
+
 			Log.d("myLogs", "onItemClick start");
-			
+
 			selectItem(position);
-			
+
 			Log.d("myLogs", "onItemClick finish");
-			
+
 		}
 	}
 
@@ -249,14 +238,14 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void setTitle(CharSequence title) {
-		
+
 		Log.d("myLogs", "setTitle start");
-		
+
 		mTitle = title;
 		getActionBar().setTitle(mTitle);
-		
+
 		Log.d("myLogs", "setTitle finish");
-		
+
 	}
 
 	/**
@@ -294,14 +283,14 @@ public class MainActivity extends Activity {
 		public static final String ARG_MENU_ITEM_NUMBER = "menu_item_number";
 
 		public MainPageFragment() {
-			
+
 			Log.d("myLogs", "MainPageFragment start");
-			
+
 			// дл€ подклассов фрагмента нужен об€зательный конструктор, хот€ бы
 			// даже пустой
-			
+
 			Log.d("myLogs", "MainPageFragment finish");
-			
+
 		}
 
 		@Override
@@ -309,29 +298,47 @@ public class MainActivity extends Activity {
 				Bundle savedInstanceState) {
 
 			Log.d("myLogs", "onCreateView start");
-
+			// получаем указатель на корневой компонент. ¬ данном случае это
+			// главна€ активность
 			View rootView = inflater.inflate(R.layout.fragment_pages,
 					container, false);
-			/*
-			 * Log.d("myLogs", "1"); int i =
-			 * getArguments().getInt(ARG_MENU_ITEM_NUMBER); Log.d("myLogs",
-			 * "2"); String pages = getResources().getStringArray(
-			 * R.array.menu_array_images)[i]; Log.d("myLogs", "3"); int imageId
-			 * = getResources().getIdentifier(
-			 * pages.toLowerCase(Locale.getDefault()), "drawable",
-			 * getActivity().getPackageName()); Log.d("myLogs", "imageId: " +
-			 * imageId + ", R.id.image: " + R.id.image);
-			 * 
-			 * // ImageView mPageImage = (ImageView) //
-			 * getActivity().findViewById(R.id.image);
-			 * 
-			 * // Log.d("myLogs", "mPageImage: "+mPageImage);
-			 * 
-			 * // mPageImage.setImageResource(imageId);
-			 * 
-			 * Log.d("myLogs", "imageId: " + imageId);
-			 * getActivity().setTitle(mPageTitles[i]);
-			 */
+
+			Log.d("myLogs", "rootView: " + rootView);
+
+			// получаем номер выбранного элемента меню
+			int i = getArguments().getInt(ARG_MENU_ITEM_NUMBER);
+
+			Log.d("myLogs", "i = " + i);
+
+			// по номеру выбранного элемента меню получаем им€ файла рисунка
+			// соответствующей этому элементу меню
+			String pages = getResources().getStringArray(
+					R.array.menu_array_images)[i];
+
+			Log.d("myLogs", "pages = " + pages);
+
+			// по имени картинки получаем номер рисунка в ресурсах
+			int imageId = getResources().getIdentifier(
+					pages.toLowerCase(Locale.getDefault()), "drawable",
+					getActivity().getPackageName());
+
+			Log.d("myLogs", "imageId: " + imageId + ", R.id.image: "
+					+ R.id.image);
+
+			// получаем указатель на компонент - ImageView
+			ImageView mPageImage = (ImageView) rootView
+					.findViewById(R.id.image);
+
+			Log.d("myLogs", "mPageImage: " + mPageImage);
+
+			// загружаем рисунок в компонент
+			mPageImage.setImageResource(imageId);
+
+			Log.d("myLogs", "imageId: " + imageId);
+
+			// устанавливаем новый заголовок окна
+			getActivity().setTitle(mPageTitles[i]);
+
 			Log.d("myLogs", "onCreateView finish");
 
 			return rootView;
