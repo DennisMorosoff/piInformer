@@ -1,11 +1,43 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/text1"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textAppearance="?android:attr/textAppearanceListItemSmall"
-    android:gravity="center_vertical"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:textColor="#fff"
-    android:background="?android:attr/activatedBackgroundIndicator"
-    android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
+    android:layout_height="60dp" >
+
+    <!-- Иконка элемента меню, берётся из папки drawable. Необходимо создать копии иконки разных размеров для всех разрешений экрана -->
+
+    <ImageView
+        android:id="@+id/menu_item_icon"
+        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/imgDescription"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp" />
+
+    <!-- Заголовок элемента меню, берётся из массива @strings/menu_array. Располагается справа от menu_item_icon (см. выше)    -->
+
+    <TextView
+        android:id="@+id/menu_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/menu_item_icon"
+        android:textSize="15sp" />
+
+    <!-- На некоторых пунктах меню может потребоваться показать число, например, количество непрочитанных новостей. Этот TextView добавлен для этого, по умолчанию пустой. -->
+
+    <TextView
+        android:id="@+id/count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:padding="0dp"
+        android:textSize="15sp" />
+
+</RelativeLayout>

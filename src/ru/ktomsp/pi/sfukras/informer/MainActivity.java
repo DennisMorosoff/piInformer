@@ -1,17 +1,23 @@
 package ru.ktomsp.pi.sfukras.informer;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,12 +25,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
+
+	private SimpleAdapter mAdapter;
+	private List<HashMap<String, String>> mList;
+	final private String ITEM_MENU_TITLE = "title";
+	final private String ITEM_MENU_ICON = "icon";
+	final private String COUNT = "count";
+
+	int[] mItemsIcons = new int[] { R.drawable.ic_action_event,
+			R.drawable.ic_action_go_to_today, R.drawable.ic_action_play,
+			R.drawable.ic_action_person, R.drawable.ic_action_group,
+			R.drawable.ic_action_web_site };
+
 	private DrawerLayout mMenuLayout; /* Слой меню */
 	private ListView mMenuList; /* Список меню */
 	private ActionBarDrawerToggle mMenuToggle; /* Переключатель меню */
@@ -35,6 +52,9 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
+		Log.d("myLogs", "onCreate start");
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
@@ -46,9 +66,35 @@ public class MainActivity extends Activity {
 		// устанавливаем тень поверх которой отобразится боковое меню
 		mMenuLayout.setDrawerShadow(R.drawable.drawer_shadow,
 				GravityCompat.START);
-		// заполняем mMenuList элементами меню
-		mMenuList.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.drawer_list_item, mPageTitles));
+
+		
+
+		mList = new ArrayList<HashMap<String, String>>();
+		for (int i = 0; i < mPageTitles.length; i++) {
+			HashMap<String, String> hm = new HashMap<String, String>();
+			hm.put(ITEM_MENU_TITLE, mPageTitles[i]);
+			hm.put(COUNT, " ");
+			hm.put(ITEM_MENU_ICON, Integer.toString(mItemsIcons[i]));
+			mList.add(hm);
+		}
+
+
+
+		String[] from = { ITEM_MENU_ICON, ITEM_MENU_TITLE, COUNT };
+
+
+
+		int[] to = { R.id.menu_item_icon, R.id.menu_item_title, R.id.count };
+
+
+
+		mAdapter = new SimpleAdapter(getActionBar().getThemedContext(), mList,
+				R.layout.drawer_list_item, from, to);
+
+
+		mMenuList.setAdapter(mAdapter);
+
+
 		// устанавливаем слушателя на список меню
 		mMenuList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -73,13 +119,23 @@ public class MainActivity extends Activity {
 		R.string.menu_close /* описание закрытия меню */
 		) {
 			public void onDrawerClosed(View view) {
+				
+				Log.d("myLogs", "onDrawerClosed start");
+				
 				getActionBar().setTitle(mTitle);
 				invalidateOptionsMenu(); // вызываем onPrepareOptionsMenu()
+				
+				Log.d("myLogs", "onDrawerClosed finish");
 			}
 
 			public void onDrawerOpened(View drawerView) {
+				
+				Log.d("myLogs", "onDrawerOpened start");
+				
 				getActionBar().setTitle(mMenuTitle);
 				invalidateOptionsMenu(); // вызываем onPrepareOptionsMenu()
+				
+				Log.d("myLogs", "onDrawerOpened finish");
 			}
 		};
 		mMenuLayout.setDrawerListener(mMenuToggle);
@@ -87,26 +143,43 @@ public class MainActivity extends Activity {
 		if (savedInstanceState == null) {
 			selectItem(0);
 		}
+		
+		Log.d("myLogs", "onCreate finish");
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+
+		Log.d("myLogs", "onCreateOptionsMenu start");
+
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main, menu);
+
+		Log.d("myLogs", "onCreateOptionsMenu finish");
+
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	/* вызывается всякий раз, когда мы вызываем invalidateOptionsMenu() */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
+
+		Log.d("myLogs", "onPrepareOptionsMenu start");
+
 		// если боковое меню открыто прячем кнопку "Поиск"
 		boolean drawerOpen = mMenuLayout.isDrawerOpen(mMenuList);
 		menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+
+		Log.d("myLogs", "onPrepareOptionsMenu finish");
+
 		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
+		Log.d("myLogs", "onOptionsItemSelected start");
+
 		// кнопка "Домой" должна открывать/закрывать меню
 		// ActionBarDrawerToggle позаботится об этом.
 		if (mMenuToggle.onOptionsItemSelected(item)) {
@@ -127,6 +200,9 @@ public class MainActivity extends Activity {
 				Toast.makeText(this, R.string.app_not_available,
 						Toast.LENGTH_LONG).show();
 			}
+
+			Log.d("myLogs", "onOptionsItemSelected finish");
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -139,11 +215,20 @@ public class MainActivity extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
+			
+			Log.d("myLogs", "onItemClick start");
+			
 			selectItem(position);
+			
+			Log.d("myLogs", "onItemClick finish");
+			
 		}
 	}
 
 	private void selectItem(int position) {
+
+		Log.d("myLogs", "selectItem start");
+
 		// обновляем фрагмент на основном экране
 		Fragment fragment = new MainPageFragment();
 		Bundle args = new Bundle();
@@ -158,12 +243,20 @@ public class MainActivity extends Activity {
 		mMenuList.setItemChecked(position, true);
 		setTitle(mPageTitles[position]);
 		mMenuLayout.closeDrawer(mMenuList);
+
+		Log.d("myLogs", "selectItem finish");
 	}
 
 	@Override
 	public void setTitle(CharSequence title) {
+		
+		Log.d("myLogs", "setTitle start");
+		
 		mTitle = title;
 		getActionBar().setTitle(mTitle);
+		
+		Log.d("myLogs", "setTitle finish");
+		
 	}
 
 	/**
@@ -173,14 +266,24 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
+
+		Log.d("myLogs", "onPostCreate start");
+
 		super.onPostCreate(savedInstanceState);
 		mMenuToggle.syncState();
+
+		Log.d("myLogs", "onPostCreate finish");
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
+
+		Log.d("myLogs", "onConfigurationChanged start");
+
 		super.onConfigurationChanged(newConfig);
 		mMenuToggle.onConfigurationChanged(newConfig);
+
+		Log.d("myLogs", "onConfigurationChanged finish");
 	}
 
 	/**
@@ -191,25 +294,46 @@ public class MainActivity extends Activity {
 		public static final String ARG_MENU_ITEM_NUMBER = "menu_item_number";
 
 		public MainPageFragment() {
+			
+			Log.d("myLogs", "MainPageFragment start");
+			
 			// для подклассов фрагмента нужен обязательный конструктор, хотя бы
 			// даже пустой
+			
+			Log.d("myLogs", "MainPageFragment finish");
+			
 		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
+
+			Log.d("myLogs", "onCreateView start");
+
 			View rootView = inflater.inflate(R.layout.fragment_pages,
 					container, false);
-			int i = getArguments().getInt(ARG_MENU_ITEM_NUMBER);
-			String pages = getResources().getStringArray(R.array.menu_array_images)[i];
-			
+			/*
+			 * Log.d("myLogs", "1"); int i =
+			 * getArguments().getInt(ARG_MENU_ITEM_NUMBER); Log.d("myLogs",
+			 * "2"); String pages = getResources().getStringArray(
+			 * R.array.menu_array_images)[i]; Log.d("myLogs", "3"); int imageId
+			 * = getResources().getIdentifier(
+			 * pages.toLowerCase(Locale.getDefault()), "drawable",
+			 * getActivity().getPackageName()); Log.d("myLogs", "imageId: " +
+			 * imageId + ", R.id.image: " + R.id.image);
+			 * 
+			 * // ImageView mPageImage = (ImageView) //
+			 * getActivity().findViewById(R.id.image);
+			 * 
+			 * // Log.d("myLogs", "mPageImage: "+mPageImage);
+			 * 
+			 * // mPageImage.setImageResource(imageId);
+			 * 
+			 * Log.d("myLogs", "imageId: " + imageId);
+			 * getActivity().setTitle(mPageTitles[i]);
+			 */
+			Log.d("myLogs", "onCreateView finish");
 
-			int imageId = getResources().getIdentifier(
-					pages.toLowerCase(Locale.getDefault()), "drawable",
-					getActivity().getPackageName());
-			((ImageView) rootView.findViewById(R.id.image))
-					.setImageResource(imageId);
-			getActivity().setTitle(mPageTitles[i]);
 			return rootView;
 		}
 	}
