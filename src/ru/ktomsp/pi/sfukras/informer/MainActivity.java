@@ -326,13 +326,12 @@ public class MainActivity extends Activity {
 					+ R.id.image);
 
 			// получаем указатель на компонент - ImageView
-			ImageView mPageImage = (ImageView) rootView
+			final ImageView mPageImage = (ImageView) rootView
 					.findViewById(R.id.image);
 
 			Log.d("myLogs", "mPageImage: " + mPageImage);
 
-			// загружаем рисунок в компонент
-			mPageImage.setImageResource(imageId);
+			loadImage(mPageImage, imageId);
 
 			Log.d("myLogs", "imageId: " + imageId);
 
@@ -342,6 +341,16 @@ public class MainActivity extends Activity {
 			Log.d("myLogs", "onCreateView finish");
 
 			return rootView;
+		}
+
+		private void loadImage(final ImageView mPageImage, final int imageId) {
+			// загружаем рисунок в компонент в отдельном потоке
+			mPageImage.post(new Runnable() {
+				@Override
+				public void run() {
+					mPageImage.setImageResource(imageId);
+				}
+			});
 		}
 	}
 }
