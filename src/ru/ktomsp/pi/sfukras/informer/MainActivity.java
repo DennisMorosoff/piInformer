@@ -40,10 +40,9 @@ public class MainActivity extends Activity {
 	private DrawerLayout mMenuLayout; /* Слой меню */
 	private ListView mMenuList; /* Список меню */
 	private ActionBarDrawerToggle mMenuToggle; /* Переключатель меню */
-
 	private CharSequence mMenuTitle; /* Заголовок меню */
 	private CharSequence mTitle; /* Заголовок текущей страницы */
-	private static String[] mPageTitles; /* Массив заголовков страниц (меню) */
+	public String[] mPageTitles; /* Массив заголовков страниц (меню) */
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -215,7 +214,7 @@ public class MainActivity extends Activity {
 		Log.d("myLogs", "selectItem start");
 
 		// обновляем фрагмент на основном экране
-		Fragment fragment = new MainPagesFragment(mPageTitles);
+		Fragment fragment = new MainPagesFragment();
 		Bundle args = new Bundle();
 		args.putInt(MainPagesFragment.ARG_MENU_ITEM_NUMBER, position);
 		fragment.setArguments(args);
