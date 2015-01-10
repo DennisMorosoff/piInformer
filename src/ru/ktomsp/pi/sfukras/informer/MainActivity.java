@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
 	int[] mItemsIcons = new int[] { R.drawable.ic_action_event,
 			R.drawable.ic_action_go_to_today, R.drawable.ic_action_play,
 			R.drawable.ic_action_person, R.drawable.ic_action_group,
-			R.drawable.ic_action_web_site };
+			R.drawable.ic_action_web_site, R.drawable.ic_action_settings };
 
 	private DrawerLayout mMenuLayout; /* Слой меню */
 	private ListView mMenuList; /* Список меню */
@@ -329,14 +329,16 @@ public class MainActivity extends Activity {
 			final ImageView mPageImage = (ImageView) rootView
 					.findViewById(R.id.image);
 
-			Log.d("myLogs", "mPageImage: " + mPageImage);
-
-			loadImage(mPageImage, imageId);
-
-			Log.d("myLogs", "imageId: " + imageId);
+			Log.d("myLogs", "mPageImage: " + mPageImage + ", mPageTitles[i]: "
+					+ mPageTitles[i]);
 
 			// устанавливаем новый заголовок окна
 			getActivity().setTitle(mPageTitles[i]);
+
+			Log.d("myLogs", "imageId: " + imageId);
+
+			// загружаем рисунок в компонент в отдельном потоке
+			loadImage(mPageImage, imageId);
 
 			Log.d("myLogs", "onCreateView finish");
 

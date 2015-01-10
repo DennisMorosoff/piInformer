@@ -9,6 +9,7 @@
         <item>Абитуриенту</item>
         <item>Структура</item>
         <item>Сайт</item>
+        <item>Настройки</item>
     </string-array>
     <string-array name="menu_array_images">
         <item>news</item>
@@ -17,6 +18,7 @@
         <item>abit</item>
         <item>struct</item>
         <item>site</item>
+        <item>prefs</item>
     </string-array>
     <string name="menu_open">Открыть боковое меню</string>
     <string name="menu_close">Закрыть боковое меню</string>
