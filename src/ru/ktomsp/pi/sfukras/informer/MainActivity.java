@@ -3,7 +3,6 @@ package ru.ktomsp.pi.sfukras.informer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -16,14 +15,11 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -219,9 +215,9 @@ public class MainActivity extends Activity {
 		Log.d("myLogs", "selectItem start");
 
 		// обновляем фрагмент на основном экране
-		Fragment fragment = new MainPageFragment();
+		Fragment fragment = new MainPagesFragment(mPageTitles);
 		Bundle args = new Bundle();
-		args.putInt(MainPageFragment.ARG_MENU_ITEM_NUMBER, position);
+		args.putInt(MainPagesFragment.ARG_MENU_ITEM_NUMBER, position);
 		fragment.setArguments(args);
 
 		FragmentManager fragmentManager = getFragmentManager();
@@ -273,86 +269,5 @@ public class MainActivity extends Activity {
 		mMenuToggle.onConfigurationChanged(newConfig);
 
 		Log.d("myLogs", "onConfigurationChanged finish");
-	}
-
-	/**
-	 * Фрагмент, который пока что умеет только отображать картинки элементов
-	 * меню
-	 */
-	public static class MainPageFragment extends Fragment {
-		public static final String ARG_MENU_ITEM_NUMBER = "menu_item_number";
-
-		public MainPageFragment() {
-
-			Log.d("myLogs", "MainPageFragment start");
-
-			// для подклассов фрагмента нужен обязательный конструктор, хотя бы
-			// даже пустой
-
-			Log.d("myLogs", "MainPageFragment finish");
-
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-
-			Log.d("myLogs", "onCreateView start");
-			// получаем указатель на корневой компонент. В данном случае это
-			// главная активность
-			View rootView = inflater.inflate(R.layout.fragment_pages,
-					container, false);
-
-			Log.d("myLogs", "rootView: " + rootView);
-
-			// получаем номер выбранного элемента меню
-			int i = getArguments().getInt(ARG_MENU_ITEM_NUMBER);
-
-			Log.d("myLogs", "i = " + i);
-
-			// по номеру выбранного элемента меню получаем имя файла рисунка
-			// соответствующей этому элементу меню
-			String pages = getResources().getStringArray(
-					R.array.menu_array_images)[i];
-
-			Log.d("myLogs", "pages = " + pages);
-
-			// по имени картинки получаем номер рисунка в ресурсах
-			int imageId = getResources().getIdentifier(
-					pages.toLowerCase(Locale.getDefault()), "drawable",
-					getActivity().getPackageName());
-
-			Log.d("myLogs", "imageId: " + imageId + ", R.id.image: "
-					+ R.id.image);
-
-			// получаем указатель на компонент - ImageView
-			final ImageView mPageImage = (ImageView) rootView
-					.findViewById(R.id.image);
-
-			Log.d("myLogs", "mPageImage: " + mPageImage + ", mPageTitles[i]: "
-					+ mPageTitles[i]);
-
-			// устанавливаем новый заголовок окна
-			getActivity().setTitle(mPageTitles[i]);
-
-			Log.d("myLogs", "imageId: " + imageId);
-
-			// загружаем рисунок в компонент в отдельном потоке
-			loadImage(mPageImage, imageId);
-
-			Log.d("myLogs", "onCreateView finish");
-
-			return rootView;
-		}
-
-		private void loadImage(final ImageView mPageImage, final int imageId) {
-			// загружаем рисунок в компонент в отдельном потоке
-			mPageImage.post(new Runnable() {
-				@Override
-				public void run() {
-					mPageImage.setImageResource(imageId);
-				}
-			});
-		}
 	}
 }
