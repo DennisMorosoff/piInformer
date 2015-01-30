@@ -213,16 +213,37 @@ public class MainActivity extends Activity {
 
 		Log.d("myLogs", "selectItem start");
 
-		// обновляем фрагмент на основном экране
-		Fragment fragment = new MainPagesFragment();
-		Bundle args = new Bundle();
-		args.putInt(MainPagesFragment.ARG_MENU_ITEM_NUMBER, position);
-		fragment.setArguments(args);
+		
+		
+		
+		switch (position) {
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+			// обновляем фрагмент на основном экране
+			Fragment fragment = new MainPagesFragment();
+			Bundle args = new Bundle();
+			args.putInt(MainPagesFragment.ARG_MENU_ITEM_NUMBER, position);
+			fragment.setArguments(args);
 
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction()
-				.replace(R.id.content_frame, fragment).commit();
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction()
+					.replace(R.id.content_frame, fragment).commit();
+			break;
 
+		case 6:
+			
+			// обновляем фрагмент на основном экране
+			Fragment fragment2 = new PreferencesPageFragment();
+
+			FragmentManager fragmentManager2 = getFragmentManager();
+			fragmentManager2.beginTransaction()
+					.replace(R.id.content_frame, fragment2).commit();
+			break;
+		}
 		// обновляем выбранный элемент меню, заговолок и закрываем боковое меню
 		mMenuList.setItemChecked(position, true);
 		setTitle(mPageTitles[position]);
